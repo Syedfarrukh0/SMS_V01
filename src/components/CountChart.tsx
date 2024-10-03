@@ -1,8 +1,8 @@
 'use client'
 
-import Image from "next/image";
 import React from "react";
-import { Legend, RadialBar, RadialBarChart, ResponsiveContainer } from "recharts";
+import Image from "next/image";
+import { RadialBar, RadialBarChart, ResponsiveContainer } from "recharts";
 
 const data = [
   {
