@@ -2,7 +2,7 @@ import React from 'react'
 import Announcements from '@/components/Announcements'
 import BigCalendar from '@/components/BigCalendar'
 import EventCalendar from '@/components/EventCalendar'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
+// import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 function StudentPage() {
   return (

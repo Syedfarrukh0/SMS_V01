@@ -57,7 +57,7 @@ function ClassListPage() {
           <Link href={`/list/teachers/${item.id}`}>
             <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky">
               {" "}
-              <Image src={"/view.png"} alt="icon" width={16} height={16} />{" "}
+              <Image src={"/edit.png"} alt="icon" width={16} height={16} />{" "}
             </button>
           </Link>
           {role === "admin" && (
