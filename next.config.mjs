@@ -5,7 +5,7 @@ const nextConfig = {
             // {hostname: 'localhost'}
             {hostname: 'images.pexels.com'},
         ],
-        domains: ['encrypted-tbn0.gstatic.com']
+        domains: ['i.pinimg.com','encrypted-tbn0.gstatic.com']
     }
 };
 
