@@ -4,6 +4,7 @@ import BigCalendar from "@/components/BigCalendar";
 import Announcements from "@/components/Announcements";
 import Link from "next/link";
 import Performance from "@/components/Performance";
+import FormModal from "@/components/FormModal";
 
 function SingleTeacherpage() {
   return (
@@ -29,7 +30,22 @@ function SingleTeacherpage() {
             </div>
             <div className="w-full sm:w-2/3 flex flex-col justify-between gap-2">
               <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-4">
                 <h1 className="text-sm font-semibold">Leonard Snyder</h1>
+                <FormModal table="teacher" type="update" data={{
+                  id: '1',
+                  username: "abc",
+                  email: 'abc@gmail.com',
+                  password: "password",
+                  firstName: 'Dean',
+                  lastName: 'Smith',
+                  phone: '1234567890',
+                  address: 'abc 123',
+                  dateOfBirth: '1995-01-02',
+                  sex: 'male',
+                  img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQygQTRmjO2KZB8KrHBKyW31wO8uQz0Ev7iA&s'
+                }} />
+                </div>
                 <p className="text-sm text-gray-500">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                 </p>
