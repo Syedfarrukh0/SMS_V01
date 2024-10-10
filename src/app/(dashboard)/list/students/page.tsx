@@ -56,7 +56,7 @@ function StudentListPage() {
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
-      <td className="flex items-center gap-4 p-4">
+      <td className="flex items-center gap-4 p-4 max-sm:w-[12rem]">
         <Image
           src={item.photo}
           alt="img.png"
@@ -69,13 +69,13 @@ function StudentListPage() {
           <p className="text-xs text-gray-500">{item?.class}</p>
         </div>
       </td>
-      <td className="hidden md:table-cell">{item.studentId}</td>
-      <td className="hidden md:table-cell">{item.grade}</td>
-      <td className="hidden md:table-cell">{item.phone}</td>
-      <td className="hidden md:table-cell">{item.address}</td>
+      <td className="hidden md:table-cell px-4">{item.studentId}</td>
+      <td className="hidden md:table-cell px-4">{item.grade}</td>
+      <td className="hidden md:table-cell px-4">{item.phone}</td>
+      <td className="hidden md:table-cell px-4">{item.address}</td>
       <td>
         <div className="flex items-center gap-2">
-          <Link href={`/list/teachers/${item.id}`}>
+          <Link href={`/list/students/${item.id}`}>
             <button className="w-7 h-7 flex items-center justify-center rounded-full bg-lamaSky">
               {" "}
               <Image src={"/view.png"} alt="icon" width={16} height={16} />{" "}

@@ -181,3 +181,17 @@ body {
   color: gray !important;
   margin-bottom: 5px !important;
 }
+
+::-webkit-scrollbar{
+  width: 0.5rem !important;
+}
+
+::-webkit-scrollbar-track{
+  background-color: #fff !important;
+  border-radius: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb{
+  background-color: #fae27c !important;
+  border-radius: 0.5rem;
+}

@@ -22,7 +22,7 @@ function SingleTeacherpage() {
                 src={
                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQygQTRmjO2KZB8KrHBKyW31wO8uQz0Ev7iA&s"
                 }
-                alt=""
+                alt="img.png"
                 width={144}
                 height={144}
                 className="w-36 h-36 rounded-full object-cover mx-auto sm:mx-0"

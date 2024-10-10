@@ -120,13 +120,12 @@ const menuItems = [
 
 function Menu() {
   return (
-    <div className="mt-4 text-sm">
+    <div className="border--2 border-[green] text-sm">
       {menuItems.map((i) => (
         <div className="flex flex-col gap-2" key={i.title}>
           {" "}
-          <span className="text-gray-400 font-light my-4">
-            {" "}
-            {i.title}{" "}
+          <span className="max-sm:-ml-2 max-sm:text-xs text-gray-400 font-light">
+            {i.title}
           </span>{" "}
           {i.items.map((i) => {
             if (i.visible.includes(role)) {

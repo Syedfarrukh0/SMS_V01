@@ -40,11 +40,11 @@ function LessonListPage() {
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
-      <td className="flex items-center gap-4 p-4">
+      <td className="flex items-center gap-4 p-4 max-sm:w-[12rem]">
         {item.subject}
       </td>
-      <td>{item?.class}</td>
-      <td className="hidden md:table-cell">{item?.teacher}</td>
+      <td className="px-4 max-sm:w-[12rem]">{item?.class}</td>
+      <td className="hidden md:table-cell px-4">{item?.teacher}</td>
       <td>
         <div className="flex items-center gap-2">
           {role === "admin" && (

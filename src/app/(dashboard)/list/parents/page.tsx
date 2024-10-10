@@ -48,15 +48,15 @@ function ParentListPage() {
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
     >
-      <td className="flex items-center gap-4 p-4">
+      <td className="flex items-center gap-4 p-4 max-sm:w-[12rem]">
         <div className="flex flex-col">
           <h3 className="font-semibold">{item.name}</h3>
           <p className="text-xs text-gray-500">{item?.email}</p>
         </div>
       </td>
-      <td className="hidden md:table-cell">{item?.students?.join(",")}</td>
-      <td className="hidden md:table-cell">{item.phone}</td>
-      <td className="hidden md:table-cell">{item.address}</td>
+      <td className="hidden md:table-cell px-4">{item?.students?.join(",")}</td>
+      <td className="hidden md:table-cell px-4">{item.phone}</td>
+      <td className="hidden md:table-cell px-4">{item.address}</td>
       <td>
         <div className="flex items-center gap-2">
           {role === "admin" && (
