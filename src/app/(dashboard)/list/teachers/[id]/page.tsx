@@ -139,11 +139,11 @@ function SingleTeacherpage() {
         <div className="bg-white p-4 rounded-md flex flex-col gap-4">
             <h1 className="text-xl font-semibold">Shortcuts</h1>
             <div className="mt-4 fllex gap-4 flexx-wrap grid grid-cols-1 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 text-xs text-gray-500">
-                <Link className="p-3 rounded-md bg-lamaSkyLight" href={'/'}>Teacher&apos;s Classes</Link>
-                <Link className="p-3 rounded-md bg-lamaPurpleLight" href={'/'}>Teacher&apos;s Students</Link>
-                <Link className="p-3 rounded-md bg-lamaYellowLight" href={'/'}>Teacher&apos;s Lessons</Link>
-                <Link className="p-3 rounded-md bg-pink-50" href={'/'}>Teacher&apos;s Exams</Link>
-                <Link className="p-3 rounded-md bg-lamaSkyLight" href={'/'}>Teacher&apos;s Assignments</Link>
+                <Link className="p-3 rounded-md bg-lamaSkyLight" href={`/list/classes?supervisorId=${2}`}>Teacher&apos;s Classes</Link>
+                <Link className="p-3 rounded-md bg-lamaPurpleLight" href={`/list/students?teacherId=${2}`}>Teacher&apos;s Students</Link>
+                <Link className="p-3 rounded-md bg-lamaYellowLight" href={`/list/lessons?teacherId=${2}`}>Teacher&apos;s Lessons</Link>
+                <Link className="p-3 rounded-md bg-pink-50" href={`/list/exams?teacherId=${2}`}>Teacher&apos;s Exams</Link>
+                <Link className="p-3 rounded-md bg-lamaSkyLight" href={`/list/assignments?teacherId=${2}`}>Teacher&apos;s Assignments</Link>
             </div>
         </div>
         <Performance />
