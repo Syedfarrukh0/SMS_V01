@@ -1,5 +1,8 @@
-import Image from 'next/image'
+'use client'
+
+import { UserButton } from '@clerk/nextjs'
 import React from 'react'
+import Image from 'next/image'
 
 function Navbar() {
   return (
@@ -22,7 +25,8 @@ function Navbar() {
           <span className='text-xs leading-3 font-medium'>Jhon Doe</span>
           <span className='text-[10px] text-gray-500 text-right'>Admin</span>
         </div>
-        <Image src={'/avatar.png'} alt='img.png' width={36} height={36} className='rounded-full' />
+        {/* <Image src={'/avatar.png'} alt='img.png' width={36} height={36} className='rounded-full' /> */}
+        <UserButton />
       </div>
     </div>
   )
