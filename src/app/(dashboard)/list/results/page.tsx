@@ -3,23 +3,24 @@ import Pagination from "@/components/Pagination";
 import TableSearch from "@/components/TableSearch";
 import Image from "next/image";
 import Table from "@/components/Table";
-import {
-  assignmentsData,
-  classesData,
-  examsData,
-  lessonsData,
-  parentsData,
-  resultsData,
-  role,
-  studentsData,
-  subjectsData,
-  teachersData,
-} from "@/lib/data";
+// import {
+//   assignmentsData,
+//   classesData,
+//   examsData,
+//   lessonsData,
+//   parentsData,
+//   resultsData,
+//   role,
+//   studentsData,
+//   subjectsData,
+//   teachersData,
+// } from "@/lib/data";
 import Link from "next/link";
 import FormModal from "@/components/FormModal";
 import { Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
+import { currentUserId, role } from "@/lib/utils";
 
 // type Result = {
 //   id: number;
@@ -73,10 +74,14 @@ const columns = [
     accessor: "date",
     className: "hidden md:table-cell",
   },
-  {
-    header: "Actions",
-    accessor: "action",
-  },
+  ...(role === "admin" || role === "teacher"
+    ? [
+        {
+          header: "Actions",
+          accessor: "action",
+        },
+      ]
+    : []),
 ];
 
 const renderRow = (item: ResultList) => (
@@ -87,14 +92,18 @@ const renderRow = (item: ResultList) => (
     <td className="flex items-center gap-4 p-4 max-sm:w-[12rem]">
       {item.title}
     </td>
-    <td>{item?.studentName + ' ' + item.studentSurname}</td>
+    <td>{item?.studentName + " " + item.studentSurname}</td>
     <td className="hidden md:table-cell px-4">{item?.score}</td>
-    <td className="hidden md:table-cell px-4">{item?.teacherName + ' ' + item.teacherSurname}</td>
+    <td className="hidden md:table-cell px-4">
+      {item?.teacherName + " " + item.teacherSurname}
+    </td>
     <td className="hidden md:table-cell px-4">{item?.className}</td>
-    <td className="hidden md:table-cell px-4">{new Intl.DateTimeFormat('en-US').format(new Date(item.startTime))}</td>
+    <td className="hidden md:table-cell px-4">
+      {new Intl.DateTimeFormat("en-US").format(new Date(item.startTime))}
+    </td>
     <td>
       <div className="flex items-center gap-2">
-        {role === "admin" && (
+        {(role === "admin" || role === "teacher") && (
           <>
             <FormModal table="result" type="update" data={item} />
             <FormModal table="result" type="delete" id={item.id} />
@@ -125,8 +134,8 @@ const ResultListPage = async ({
           case "search":
             {
               query.OR = [
-                { exam : { title: { contains: value, mode: "insensitive" } }},
-                { student : { name: { contains: value, mode: "insensitive" } }},
+                { exam: { title: { contains: value, mode: "insensitive" } } },
+                { student: { name: { contains: value, mode: "insensitive" } } },
               ];
             }
             break;
@@ -135,6 +144,30 @@ const ResultListPage = async ({
         }
       }
     }
+  }
+
+  // Role Conditions
+  switch (role) {
+    case "admin":
+      break;
+
+    case "teacher":
+      query.OR = [
+        { exam: { lesson: { teacherId: currentUserId! } } },
+        { assignment: { lesson: { teacherId: currentUserId! } } }
+      ];
+      break;
+
+      case "student":
+        query.studentId = currentUserId!;
+        break;
+
+      case "parent":
+        query.student = {parentId: currentUserId!};
+        break;
+
+    default:
+      break;
   }
 
   const [dataRes, count] = await prisma.$transaction([
@@ -200,7 +233,9 @@ const ResultListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src={"/sort.png"} alt="icon" width={14} height={14} />
             </button>
-            {role === "admin" && <FormModal table="result" type="create" />}
+            {(role === "admin" || role === "teacher") && (
+              <FormModal table="result" type="create" />
+            )}
           </div>
         </div>
       </div>

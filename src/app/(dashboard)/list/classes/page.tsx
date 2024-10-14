@@ -3,12 +3,13 @@ import Pagination from "@/components/Pagination";
 import TableSearch from "@/components/TableSearch";
 import Image from "next/image";
 import Table from "@/components/Table";
-import { classesData, parentsData, role, studentsData, subjectsData, teachersData } from "@/lib/data";
+// import { classesData, parentsData, role, studentsData, subjectsData, teachersData } from "@/lib/data";
 import Link from "next/link";
 import FormModal from "@/components/FormModal";
 import { Class, Prisma, Teacher } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
+import { role } from "@/lib/utils";
 
 // type Class = {
 //   id: number;
@@ -40,10 +41,10 @@ const columns = [
     accessor: "supervisor",
     className: "hidden md:table-cell",
   },
-  {
+  ...(role === "admin" ? [{
     header: "Actions",
     accessor: "action",
-  },
+  }]: []),
 ];
 
 const renderRow = (item: ClassList) => (

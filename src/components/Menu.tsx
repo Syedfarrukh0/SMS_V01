@@ -1,4 +1,4 @@
-import { role } from "@/lib/data";
+import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -118,7 +118,10 @@ const menuItems = [
   },
 ];
 
-function Menu() {
+const Menu = async () => {
+  const user = await currentUser();
+  const role = user?.publicMetadata?.role as string;
+
   return (
     <div className="border--2 border-[green] text-sm">
       {menuItems.map((i) => (

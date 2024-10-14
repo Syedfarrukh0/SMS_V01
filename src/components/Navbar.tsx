@@ -1,10 +1,12 @@
-'use client'
-
 import { UserButton } from '@clerk/nextjs'
 import React from 'react'
 import Image from 'next/image'
+import { currentUser } from '@clerk/nextjs/server';
 
-function Navbar() {
+const Navbar = async () => {
+  const user = await currentUser();
+  const role = user?.publicMetadata?.role as string;
+
   return (
     <div className='flex items-center justify-between p-4'>
       {/* serach bar */}
@@ -23,7 +25,7 @@ function Navbar() {
         </div>
         <div className='flex flex-col'>
           <span className='text-xs leading-3 font-medium'>Jhon Doe</span>
-          <span className='text-[10px] text-gray-500 text-right'>Admin</span>
+          <span className='text-[10px] text-gray-500 text-right'>{role}</span>
         </div>
         {/* <Image src={'/avatar.png'} alt='img.png' width={36} height={36} className='rounded-full' /> */}
         <UserButton />

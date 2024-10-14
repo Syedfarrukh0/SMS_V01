@@ -3,12 +3,13 @@ import Pagination from "@/components/Pagination";
 import TableSearch from "@/components/TableSearch";
 import Image from "next/image";
 import Table from "@/components/Table";
-import { announcementsData, assignmentsData, classesData, eventsData, examsData, lessonsData, parentsData, resultsData, role, studentsData, subjectsData, teachersData } from "@/lib/data";
+// import { announcementsData, assignmentsData, classesData, eventsData, examsData, lessonsData, parentsData, resultsData, role, studentsData, subjectsData, teachersData } from "@/lib/data";
 import Link from "next/link";
 import FormModal from "@/components/FormModal";
 import { Announcement, Class, Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
+import { currentUserId, role } from "@/lib/utils";
 
 // type Announcement = {
 //   id: number;
@@ -33,10 +34,10 @@ const columns = [
     accessor: "date",
     className: "hidden md:table-cell",
   },
-  {
+  ...(role === "admin" ? [{
     header: "Actions",
     accessor: "action",
-  },
+  }]: []),
 ];
 
 const renderRow = (item: AnnouncementList) => (
@@ -45,9 +46,9 @@ const renderRow = (item: AnnouncementList) => (
     className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
   >
     <td className="flex items-center gap-4 p-4 max-sm:w-[12rem]">
-      {item.title}
+      {item?.title}
     </td>
-    <td className="px-4">{item?.class.name}</td>
+    <td className="px-4">{item?.class?.name || "-"}</td>
     <td className="hidden md:table-cell px-4">{new Intl.DateTimeFormat('en-US').format(new Date(item.date))}</td>
     <td>
       <div className="flex items-center gap-2">
@@ -84,6 +85,20 @@ const AnnouncementListPage = async ({
       }
     }
   }
+
+  // Role Conditions
+  const roleConditions = {
+    teacher: { lessons: { some: { teacherId: currentUserId! } } },
+    student: { students: { some: { id: currentUserId! } } },
+    parent: { students: { some: { parentId: currentUserId! } } },
+  }
+
+  query.OR = [
+    { classId: null },
+    {
+      class: roleConditions[role as keyof typeof roleConditions] || {},
+    }
+  ]
 
   const [data, count] = await prisma.$transaction([
     prisma.announcement.findMany({

@@ -3,12 +3,13 @@ import Pagination from "@/components/Pagination";
 import TableSearch from "@/components/TableSearch";
 import Image from "next/image";
 import Table from "@/components/Table";
-import { assignmentsData, classesData, eventsData, examsData, lessonsData, parentsData, resultsData, role, studentsData, subjectsData, teachersData } from "@/lib/data";
+// import { assignmentsData, classesData, eventsData, examsData, lessonsData, parentsData, resultsData, role, studentsData, subjectsData, teachersData } from "@/lib/data";
 import Link from "next/link";
 import FormModal from "@/components/FormModal";
 import { Class, Event, Prisma } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
+import { currentUserId, role } from "@/lib/utils";
 
 // type Event = {
 //   id: number;
@@ -19,7 +20,7 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 //   endTime: string;
 // };
 
-type EventList = Event & { class: Class}
+type EventList = Event & { class: Class };
 
 const columns = [
   {
@@ -45,10 +46,14 @@ const columns = [
     accessor: "endTime",
     className: "hidden md:table-cell",
   },
-  {
-    header: "Actions",
-    accessor: "action",
-  },
+  ...(role === "admin"
+    ? [
+        {
+          header: "Actions",
+          accessor: "action",
+        },
+      ]
+    : []),
 ];
 
 const renderRow = (item: EventList) => (
@@ -59,16 +64,30 @@ const renderRow = (item: EventList) => (
     <td className="flex items-center gap-4 p-4 max-sm:w-[12rem]">
       {item.title}
     </td>
-    <td className="px-4">{item?.class.name}</td>
-    <td className="hidden md:table-cell px-4">{new Intl.DateTimeFormat('en-US').format(new Date(item.startTime))}</td>
-    <td className="hidden md:table-cell px-4">{item?.startTime.toLocaleTimeString("en-US", {hour: "2-digit", minute: "2-digit", hour12: false})}</td>
-    <td className="hidden md:table-cell px-4">{item?.endTime.toLocaleTimeString("en-US", {hour: "2-digit", minute: "2-digit", hour12: false})}</td> 
+    <td className="px-4">{item?.class?.name || "-"}</td>
+    <td className="hidden md:table-cell px-4">
+      {new Intl.DateTimeFormat("en-US").format(new Date(item.startTime))}
+    </td>
+    <td className="hidden md:table-cell px-4">
+      {item?.startTime.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })}
+    </td>
+    <td className="hidden md:table-cell px-4">
+      {item?.endTime.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })}
+    </td>
     <td>
       <div className="flex items-center gap-2">
         {role === "admin" && (
           <>
-          <FormModal table="event" type="update" data={item} />
-          <FormModal table="event" type="delete" id={item.id} />
+            <FormModal table="event" type="update" data={item} />
+            <FormModal table="event" type="delete" id={item.id} />
           </>
         )}
       </div>
@@ -88,16 +107,31 @@ const EventListPage = async ({
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
         switch (key) {
-          case "search": {
-            query.title = {contains: value as string, mode: 'insensitive'}
-          }
-          break;
+          case "search":
+            {
+              query.title = { contains: value as string, mode: "insensitive" };
+            }
+            break;
           default:
             break;
         }
       }
     }
   }
+
+  // Role Conditions
+  const roleConditions = {
+    teacher: { lessons: { some: { teacherId: currentUserId! } } },
+    student: { students: { some: { id: currentUserId! } } },
+    parent: { students: { some: { parentId: currentUserId! } } },
+  }
+
+  query.OR = [
+    { classId: null },
+    {
+      class: roleConditions[role as keyof typeof roleConditions] || {},
+    }
+  ]
 
   const [data, count] = await prisma.$transaction([
     prisma.event.findMany({
@@ -108,7 +142,7 @@ const EventListPage = async ({
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
-    prisma.event.count({where: query}),
+    prisma.event.count({ where: query }),
   ]);
 
   return (
@@ -125,9 +159,7 @@ const EventListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src={"/sort.png"} alt="icon" width={14} height={14} />
             </button>
-            {role === "admin" && (
-              <FormModal table="event" type="create" />
-            )}
+            {role === "admin" && <FormModal table="event" type="create" />}
           </div>
         </div>
       </div>
@@ -137,6 +169,6 @@ const EventListPage = async ({
       <Pagination page={p} count={count} />
     </div>
   );
-}
+};
 
 export default EventListPage;

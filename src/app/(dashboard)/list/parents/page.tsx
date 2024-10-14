@@ -3,12 +3,13 @@ import Pagination from "@/components/Pagination";
 import TableSearch from "@/components/TableSearch";
 import Image from "next/image";
 import Table from "@/components/Table";
-import { parentsData, role, studentsData, teachersData } from "@/lib/data";
+// import { parentsData, role, studentsData, teachersData } from "@/lib/data";
 import Link from "next/link";
 import FormModal from "@/components/FormModal";
 import { Parent, Prisma, Student } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
+import { role } from "@/lib/utils";
 
 // type Parent = {
 //   id: number;
@@ -19,7 +20,7 @@ import { ITEM_PER_PAGE } from "@/lib/settings";
 //   address: string;
 // };
 
-type ParentList = Parent & { students: Student[] }
+type ParentList = Parent & { students: Student[] };
 
 const columns = [
   {
@@ -41,10 +42,14 @@ const columns = [
     accessor: "address",
     className: "hidden lg:table-cell",
   },
-  {
-    header: "Actions",
-    accessor: "action",
-  },
+  ...(role === "admin"
+    ? [
+        {
+          header: "Actions",
+          accessor: "action",
+        },
+      ]
+    : []),
 ];
 
 const renderRow = (item: ParentList) => (
@@ -58,15 +63,17 @@ const renderRow = (item: ParentList) => (
         <p className="text-xs text-gray-500">{item?.email}</p>
       </div>
     </td>
-    <td className="hidden md:table-cell px-4">{item?.students.map(student => student.name).join(",")}</td>
+    <td className="hidden md:table-cell px-4">
+      {item?.students.map((student) => student.name).join(",")}
+    </td>
     <td className="hidden md:table-cell px-4">{item.phone}</td>
     <td className="hidden md:table-cell px-4">{item.address}</td>
     <td>
       <div className="flex items-center gap-2">
         {role === "admin" && (
           <>
-          <FormModal table="parent" type="update" data={item} />
-          <FormModal table="parent" type="delete" id={item.id} />
+            <FormModal table="parent" type="update" data={item} />
+            <FormModal table="parent" type="delete" id={item.id} />
           </>
         )}
       </div>
@@ -86,10 +93,11 @@ const ParentListPage = async ({
     for (const [key, value] of Object.entries(queryParams)) {
       if (value !== undefined) {
         switch (key) {
-          case "search": {
-            query.name = {contains: value as string, mode: 'insensitive'}
-          }
-          break;
+          case "search":
+            {
+              query.name = { contains: value as string, mode: "insensitive" };
+            }
+            break;
           default:
             break;
         }
@@ -106,7 +114,7 @@ const ParentListPage = async ({
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
-    prisma.parent.count({where: query}),
+    prisma.parent.count({ where: query }),
   ]);
 
   return (
@@ -123,9 +131,7 @@ const ParentListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src={"/sort.png"} alt="icon" width={14} height={14} />
             </button>
-            {role === "admin" && (
-              <FormModal table="parent" type="create" />
-            )}
+            {role === "admin" && <FormModal table="parent" type="create" />}
           </div>
         </div>
       </div>
@@ -135,6 +141,6 @@ const ParentListPage = async ({
       <Pagination page={p} count={count} />
     </div>
   );
-}
+};
 
 export default ParentListPage;
