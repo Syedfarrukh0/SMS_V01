@@ -1,6 +1,3 @@
-// "use client";
-
-
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,13 +29,13 @@ const schema = z.object({
 
 type Inputs = z.infer<typeof schema>;
 
-function TeacherForm({
+const TeacherForm = ({
   type,
   data,
 }: {
   type: "create" | "update";
   data?: any;
-}) {
+}) => {
   const [fileName, setFileName] = useState<string | null>(null);
 
   const {

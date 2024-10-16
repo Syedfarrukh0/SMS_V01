@@ -10,6 +10,7 @@ import { Lesson, Prisma, Subject, Teacher } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { role } from "@/lib/utils";
+import FormContainer from "@/components/FormContainer";
 
 // type Subject = {
 //   id: number;
@@ -17,7 +18,7 @@ import { role } from "@/lib/utils";
 //   teachers: string[];
 // };
 
-type SubjectList = Subject & {teachers: Teacher[]}
+type SubjectList = Subject & { teachers: Teacher[] }
 
 const columns = [
   {
@@ -31,11 +32,11 @@ const columns = [
   },
   ...(role === "admin"
     ? [
-        {
-          header: "Actions",
-          accessor: "action",
-        },
-      ]
+      {
+        header: "Actions",
+        accessor: "action",
+      },
+    ]
     : []),
 ];
 
@@ -52,8 +53,8 @@ const renderRow = (item: SubjectList) => (
       <div className="flex items-center gap-2">
         {role === "admin" && (
           <>
-          <FormModal table="subject" type="update" data={item} />
-          <FormModal table="subject" type="delete" id={item.id} />
+            <FormContainer table="subject" type="update" data={item} />
+            <FormContainer table="subject" type="delete" id={item.id} />
           </>
         )}
       </div>
@@ -74,9 +75,9 @@ const SubjectListPage = async ({
       if (value !== undefined) {
         switch (key) {
           case "search": {
-            query.name = {contains: value as string, mode: 'insensitive'}
+            query.name = { contains: value as string, mode: 'insensitive' }
           }
-          break;
+            break;
           default:
             break;
         }
@@ -93,7 +94,7 @@ const SubjectListPage = async ({
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
-    prisma.subject.count({where: query}),
+    prisma.subject.count({ where: query }),
   ]);
 
   return (

@@ -11,18 +11,6 @@ import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { role } from "@/lib/utils";
 
-// type Teacher = {
-//   id: number;
-//   teacherId: string;
-//   name: string;
-//   email: string;
-//   photo: string;
-//   phone: string;
-//   subjects: string[];
-//   classes: string[];
-//   address: string;
-// };
-
 type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
 
 const columns = [
@@ -57,11 +45,11 @@ const columns = [
   },
   ...(role === "admin"
     ? [
-        {
-          header: "Actions",
-          accessor: "action",
-        },
-      ]
+      {
+        header: "Actions",
+        accessor: "action",
+      },
+    ]
     : []),
 ];
 
@@ -124,11 +112,11 @@ const TeacherListPage = async ({
               }
             }
           }
-          break;
+            break;
           case "search": {
-            query.name = {contains: value as string, mode: 'insensitive'}
+            query.name = { contains: value as string, mode: 'insensitive' }
           }
-          break;
+            break;
           default:
             break;
         }
@@ -146,7 +134,7 @@ const TeacherListPage = async ({
       take: ITEM_PER_PAGE,
       skip: ITEM_PER_PAGE * (p - 1),
     }),
-    prisma.teacher.count({where: query}),
+    prisma.teacher.count({ where: query }),
   ]);
 
   return (

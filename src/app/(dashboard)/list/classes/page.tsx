@@ -10,6 +10,7 @@ import { Class, Prisma, Teacher } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { role } from "@/lib/utils";
+import FormContainer from "@/components/FormContainer";
 
 // type Class = {
 //   id: number;
@@ -62,8 +63,8 @@ const renderRow = (item: ClassList) => (
       <div className="flex items-center gap-2">
         {role === "admin" && (
           <>
-          <FormModal table="class" type="update" data={item} />
-          <FormModal table="class" type="delete" id={item.id} />
+          <FormContainer table="class" type="update" data={item} />
+          <FormContainer table="class" type="delete" id={item.id} />
           </>
         )}
       </div>
