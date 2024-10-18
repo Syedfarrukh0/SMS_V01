@@ -3,13 +3,12 @@ import Pagination from "@/components/Pagination";
 import TableSearch from "@/components/TableSearch";
 import Image from "next/image";
 import Table from "@/components/Table";
-// import { role, teachersData } from "@/lib/data";
-import Link from "next/link";
-import FormModal from "@/components/FormModal";
 import { Class, Prisma, Subject, Teacher } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { role } from "@/lib/utils";
+import FormContainer from "@/components/FormContainer";
+import Link from "next/link";
 
 type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
 
@@ -87,7 +86,7 @@ const renderRow = (item: TeacherList) => (
             <Image src={"/view.png"} alt="icon" width={16} height={16} />
           </button>
         </Link>
-        {/* {role === "admin" && <FormModal table="teacher" type="delete" id={item.id} />} */}
+        {role === "admin" && <FormContainer table="teacher" type="delete" id={item.id} />}
       </div>
     </td>
   </tr>
@@ -151,7 +150,7 @@ const TeacherListPage = async ({
             <button className="w-8 h-8 flex items-center justify-center rounded-full bg-lamaYellow">
               <Image src={"/sort.png"} alt="icon" width={14} height={14} />
             </button>
-            {role === "admin" && <FormModal table="teacher" type="create" />}
+            {role === "admin" && <FormContainer table="teacher" type="create" />}
           </div>
         </div>
       </div>

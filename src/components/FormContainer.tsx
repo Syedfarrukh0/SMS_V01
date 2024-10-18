@@ -28,7 +28,7 @@ const FormContainer = async ({
     id,
 }: FormContainerProps) => {
     // let relatedData: any = {};
-    let relatedData: { teachers?: any[]; grades?: any[] } | undefined;
+    let relatedData: { teachers?: any[]; grades?: any[]; subjects?: any[] } | undefined;
 
     if (type !== "delete") {
         try {
@@ -39,7 +39,7 @@ const FormContainer = async ({
                     })
                     relatedData = { teachers: subjectTeachers.length > 0 ? subjectTeachers : [] }; // Return empty array if no teachers found
                     break;
-    
+
                 case "class":
                     const classGrades = await prisma.grade.findMany({
                         select: { id: true, level: true }
@@ -47,29 +47,36 @@ const FormContainer = async ({
                     const classTeachers = await prisma.teacher.findMany({
                         select: { id: true, name: true, surname: true }
                     })
-                    relatedData = { 
+                    relatedData = {
                         teachers: classTeachers.length > 0 ? classTeachers : [], // Handle empty teachers case
                         grades: classGrades.length > 0 ? classGrades : [] // Handle empty grades case
                     };
-
-                    console.log(relatedData)
                     break;
-    
+
+                case "teacher":
+                    const teacherSubjects = await prisma.subject.findMany({
+                        select: { id: true, name: true }
+                    })
+                    relatedData = {
+                        subjects: teacherSubjects.length > 0 ? teacherSubjects : [], // Handle empty teachers case Handle empty grades case
+                    };
+                    break;
+
                 default:
                     relatedData = {};
                     break;
-            }    
+            }
         } catch (error) {
-         console.log(error)   
-         relatedData = {};
+            console.log(error)
+            relatedData = {};
         }
     }
 
-     // Ensure relatedData has default values for teachers and grades
-     const { teachers = [], grades = [] } = relatedData || {};
+    // Ensure relatedData has default values for teachers and grades
+    const { teachers = [], grades = [], subjects = [] } = relatedData || {};
 
     return (
-        <div> <FormModal table={table} data={data} type={type} id={id} relatedData={{ teachers, grades }} /> </div>
+        <div> <FormModal table={table} data={data} type={type} id={id} relatedData={{ teachers, grades, subjects }} /> </div>
         // <div> <FormModal table={table} data={data} type={type} id={id} relatedData={relatedData} /> </div>
     )
 }

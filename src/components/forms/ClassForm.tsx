@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import InputField from "../InputField";
 import Image from "next/image";
-import { classSchema, ClassSchema, subjectSchema, SubjectSchema } from "@/lib/formValidationSchemas";
-import { createClass, createSubject, updateClass, updateSubject } from "@/lib/actions";
+import { classSchema, ClassSchema } from "@/lib/formValidationSchemas";
+import { createClass, updateClass } from "@/lib/actions";
 import { useFormState } from "react-dom";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -65,7 +65,7 @@ const ClassForm = ({
                 />
                 <InputField
                     label="Capacity"
-                    name="name"
+                    name="capacity"
                     defaultValue={data?.capacity}
                     register={register}
                     error={errors?.capacity}
@@ -84,11 +84,10 @@ const ClassForm = ({
                         className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
                         {...register("supervisorId")}
                         defaultValue={data?.supervisorId || ""}
-                        // defaultValue={data?.teachers || []}
                     >
                         {
                             teachers.map((teacher: { id: string; name: string; surname: string }) => (
-                                <option value={teacher.id} key={teacher.id}> {teacher.name + " " + teacher.surname} </option>
+                                <option value={teacher.id} key={teacher.id} selected={data && teacher.id === data.supervisorId}> {teacher.name + " " + teacher.surname} </option>
                             ))
                         }
                     </select>
@@ -107,7 +106,7 @@ const ClassForm = ({
                     >
                         {
                             grades.map((grade: { id: number; level: number }) => (
-                                <option value={grade.id} key={grade.id}> {grade.level} </option>
+                                <option value={grade.id} key={grade.id} selected={data && grade.id === data.gradeId}> {grade.level} </option>
                             ))
                         }
                     </select>
