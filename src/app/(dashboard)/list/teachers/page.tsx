@@ -6,9 +6,13 @@ import Table from "@/components/Table";
 import { Class, Prisma, Subject, Teacher } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { role } from "@/lib/utils";
+// import { role } from "@/lib/utils";
 import FormContainer from "@/components/FormContainer";
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
+
+const { sessionClaims } = auth();
+const role = (sessionClaims?.metadata as { role?: string })?.role;
 
 type TeacherList = Teacher & { subjects: Subject[] } & { classes: Class[] };
 
@@ -95,6 +99,7 @@ const renderRow = (item: TeacherList) => (
 const TeacherListPage = async ({
   searchParams = {},
 }: { searchParams?: { [key: string]: string } } | undefined = {}) => {
+
   const { page, ...queryParams } = searchParams;
   const p = page ? parseInt(page) : 1;
 

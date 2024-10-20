@@ -28,7 +28,7 @@ const FormContainer = async ({
     id,
 }: FormContainerProps) => {
     // let relatedData: any = {};
-    let relatedData: { teachers?: any[]; grades?: any[]; subjects?: any[] } | undefined;
+    let relatedData: { teachers?: any[]; grades?: any[]; subjects?: any[], classes?: any[] } | undefined;
 
     if (type !== "delete") {
         try {
@@ -62,6 +62,19 @@ const FormContainer = async ({
                     };
                     break;
 
+                case "student":
+                    const studentGrades = await prisma.grade.findMany({
+                        select: { id: true, level: true }
+                    })
+                    const studentClasses = await prisma.class.findMany({
+                        include: { _count: { select: { students: true}} }
+                    })
+                    relatedData = {
+                        classes: studentClasses.length > 0 ? studentClasses : [],
+                        grades: studentGrades.length > 0 ? studentGrades : [], // Handle empty teachers case Handle empty grades case
+                    };
+                    break;
+
                 default:
                     relatedData = {};
                     break;
@@ -73,10 +86,10 @@ const FormContainer = async ({
     }
 
     // Ensure relatedData has default values for teachers and grades
-    const { teachers = [], grades = [], subjects = [] } = relatedData || {};
+    const { teachers = [], grades = [], subjects = [], classes = [] } = relatedData || {};
 
     return (
-        <div> <FormModal table={table} data={data} type={type} id={id} relatedData={{ teachers, grades, subjects }} /> </div>
+        <div> <FormModal table={table} data={data} type={type} id={id} relatedData={{ teachers, grades, subjects, classes }} /> </div>
         // <div> <FormModal table={table} data={data} type={type} id={id} relatedData={relatedData} /> </div>
     )
 }

@@ -9,7 +9,9 @@ import FormModal from "@/components/FormModal";
 import { Class, Prisma, Student } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { role } from "@/lib/utils";
+import { auth } from "@clerk/nextjs/server";
+import FormContainer from "@/components/FormContainer";
+// import { role } from "@/lib/utils";
 
 // type Student = {
 //   id: number;
@@ -22,6 +24,9 @@ import { role } from "@/lib/utils";
 //   class: string;
 //   address: string;
 // };
+
+const { sessionClaims } = auth();
+const role = (sessionClaims?.metadata as { role?: string })?.role;
 
 type StudentList = Student & {class: Class};
 
@@ -91,7 +96,7 @@ const renderRow = (item: StudentList) => (
           </button>
         </Link>
         {role === "admin" && (
-          <FormModal table="student" type="delete" id={item.id} />
+          <FormContainer table="student" type="delete" id={item.id} />
         )}
       </div>
     </td>
@@ -101,6 +106,7 @@ const renderRow = (item: StudentList) => (
 const StudentListPage = async ({
   searchParams = {},
 }: { searchParams?: { [key: string]: string } } | undefined = {}) => {
+
   const { page, ...queryParams } = searchParams;
   const p = page ? parseInt(page) : 1;
 
@@ -158,7 +164,7 @@ const StudentListPage = async ({
               <Image src={"/sort.png"} alt="icon" width={14} height={14} />
             </button>
             {role === "admin" && (
-              <FormModal table="student" type="create" />
+              <FormContainer table="student" type="create" />
             )}
           </div>
         </div>

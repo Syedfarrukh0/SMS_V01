@@ -101,8 +101,8 @@ const ClassForm = ({
                     <label className="text-xs text-gray-500">Grade</label>
                     <select
                         className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm w-full"
-                        {...register("gradId")}
-                        defaultValue={data?.gradeId || ""}
+                        {...register("gradeId")}
+                        defaultValue={data?.gradId}
                     >
                         {
                             grades.map((grade: { id: number; level: number }) => (
@@ -110,9 +110,9 @@ const ClassForm = ({
                             ))
                         }
                     </select>
-                    {errors?.gradId?.message && (
+                    {errors?.gradeId?.message && (
                         <p className="text-xs text-red-400">
-                            {errors.gradId.message.toString()}
+                            {errors.gradeId.message.toString()}
                         </p>
                     )}
                 </div>

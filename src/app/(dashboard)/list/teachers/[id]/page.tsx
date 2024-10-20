@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import BigCalendar from "@/components/BigCalendar";
 import Announcements from "@/components/Announcements";
 import Link from "next/link";
 import Performance from "@/components/Performance";
@@ -9,6 +8,7 @@ import { notFound } from "next/navigation";
 import FormContainer from "@/components/FormContainer";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import BigCalendarContainer from "@/components/BigCalendarContainer";
 
 const SingleTeacherPage = async ({ params: { id } }: { params: { id: string; } }) => {
 
@@ -146,7 +146,7 @@ const SingleTeacherPage = async ({ params: { id } }: { params: { id: string; } }
         {/* bottom */}
         <div className="mt-4 bg-white rounded-md p-4 h-[800px]">
           <h1>Teacher&apos;s Schedule</h1>
-          {/* <BigCalendar /> */}
+          <BigCalendarContainer type="teacherId" id={teacher.id} />
         </div>
       </div>
 

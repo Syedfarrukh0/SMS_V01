@@ -9,8 +9,9 @@ import FormModal from "@/components/FormModal";
 import { Class, Prisma, Teacher } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
-import { role } from "@/lib/utils";
+// import { role } from "@/lib/utils";
 import FormContainer from "@/components/FormContainer";
+import { auth } from "@clerk/nextjs/server";
 
 // type Class = {
 //   id: number;
@@ -19,6 +20,9 @@ import FormContainer from "@/components/FormContainer";
 //   grade: number;
 //   supervisor: string;
 // };
+
+const { sessionClaims } = auth();
+const role = (sessionClaims?.metadata as { role?: string })?.role;
 
 type ClassList = Class & { supervisor: Teacher}
 
@@ -126,7 +130,7 @@ const ClassListPage = async ({
               <Image src={"/sort.png"} alt="icon" width={14} height={14} />
             </button>
             {role === "admin" && (
-              <FormModal table="class" type="create" />
+              <FormContainer table="class" type="create" />
             )}
           </div>
         </div>
